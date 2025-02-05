@@ -20,12 +20,12 @@ public class ProductController {
         // 응답 보내기
         return productService.createProduct(requestDto);
     }
-    // 관심 상품 희망 최저가 등록하기
-//    @PutMapping("/products/{id}")
-//    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductMypriceRequestDto requestDto) {
-//        // 응답 보내기
-//        return productService.updateProduct(id, requestDto);
-//    }
+//     관심 상품 희망 최저가 등록하기
+    @PutMapping("/products/{id}")
+    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductMypriceRequestDto requestDto) {
+        // 응답 보내기
+        return productService.updateProduct(id, requestDto);
+    }
 
 
 }

@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductMypriceRequestDto {
+public class ProductMypriceRequestDto {//여기다 BEAN VALIDATION해도좋음 해봬자 100이상이런거
     private int myprice;
 }
