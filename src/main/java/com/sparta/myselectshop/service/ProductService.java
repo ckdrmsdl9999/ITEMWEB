@@ -47,6 +47,7 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponseDto> getProducts(User user, int page, int size, String sortBy, boolean isAsc) {//함수형으로 한줄로해보기
 
         Sort.Direction direction=isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
