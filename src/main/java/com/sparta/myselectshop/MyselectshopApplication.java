@@ -8,7 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJpaAuditing
 @EnableScheduling
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication
+//        (exclude = SecurityAutoConfiguration.class)
 public class MyselectshopApplication {
 
     public static void main(String[] args) {
