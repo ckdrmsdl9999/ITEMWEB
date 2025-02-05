@@ -5,9 +5,14 @@ import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
 import com.sparta.myselectshop.entity.User;
+import com.sparta.myselectshop.entity.UserRoleEnum;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,16 +47,28 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public List<ProductResponseDto> getProducts(User user) {//함수형으로 한줄로해보기
+    public Page<ProductResponseDto> getProducts(User user, int page, int size, String sortBy, boolean isAsc) {//함수형으로 한줄로해보기
 
-        List<ProductResponseDto> responseDtoList=new ArrayList<>();
-        List<Product> products=productRepository.findAllByUser( user); //이것도 altenter되네
+        Sort.Direction direction=isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        for (Product product : products) {
-            responseDtoList.add(new ProductResponseDto(product));
-
+        UserRoleEnum userRoleEnum = user.getRole();
+        Page<Product> productList;
+        if(userRoleEnum==userRoleEnum.USER){
+            productList=productRepository.findAllByUser(user,pageable);
+        }else {
+            productList=productRepository.findAll(pageable);
         }
-        return responseDtoList;
+
+//        List<ProductResponseDto> responseDtoList=new ArrayList<>();
+//        List<Product> products=productRepository.findAllByUser( user); //이것도 altenter되네
+//
+//        for (Product product : products) {
+//            responseDtoList.add(new ProductResponseDto(product));
+//
+//        }
+        return productList.map(ProductResponseDto::new);
 
     }
     @Transactional
@@ -62,14 +79,14 @@ public class ProductService {
      product.updateByItemDto(itemDto);
     }
 
-    public List<ProductResponseDto> getAllProducts() {
-        List<ProductResponseDto> responseDtoList=new ArrayList<>();
-        List<Product> products=productRepository.findAll(); //이것도 altenter되네
-
-        for (Product product : products) {
-            responseDtoList.add(new ProductResponseDto(product));
-
-        }
-        return responseDtoList;
-    }
+//    public List<ProductResponseDto> getAllProducts() { //페이징추가하면 또만들어야되서
+//        List<ProductResponseDto> responseDtoList=new ArrayList<>();
+//        List<Product> products=productRepository.findAll(); //이것도 altenter되네
+//
+//        for (Product product : products) {
+//            responseDtoList.add(new ProductResponseDto(product));
+//
+//        }
+//        return responseDtoList;
+//    }
 }

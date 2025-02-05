@@ -7,6 +7,7 @@ import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +34,19 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return productService.getProducts(userDetails.getUser());
+    public Page<ProductResponseDto> getProducts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        //클라이언트에서는 page 1부터시작 서버쪽 0부터시작되는거때문에
+        return productService.getProducts(userDetails.getUser(), page-1,size,sortBy,isAsc );
     }
 
-@GetMapping("/admin/products")
-    public List<ProductResponseDto> getAllProducts(){
-        return productService.getAllProducts();
-}
+//@GetMapping("/admin/products")
+//    public List<ProductResponseDto> getAllProducts(){
+//        return productService.getAllProducts();
+//}
 
 }
