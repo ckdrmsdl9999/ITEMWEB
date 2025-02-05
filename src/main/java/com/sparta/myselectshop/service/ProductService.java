@@ -4,6 +4,7 @@ import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
+import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,25 +20,10 @@ public class ProductService {
     public static final int MIN_MY_PRICE = 100;
 
     private final ProductRepository productRepository;
-//
-//    @Transactddddional
-//    public ProductResponseDto updateProduct(Long id, ProductMypriceRequestDto requestDto) {
-//        int myprice = requestDto.getMyprice();
-//        if (myprice < MIN_MY_PRICE) {
-//            throw new IllegalArgumentException("유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + " 원 이상으로 설정해 주세요.");
-//        }
-//
-//        Product product = productRepository.findById(id).orElseThrow(() ->
-//                new NullPointerException("해당 상품을 찾을 수 없습니다.")
-//        );
-//
-//        product.update(requestDto);
-//
-//        return new ProductResponseDto(product);
-//    }
 
-    public ProductResponseDto createProduct(ProductRequestDto requestDto) {
-        Product product = productRepository.save(new Product(requestDto));
+
+    public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
+        Product product = productRepository.save(new Product(requestDto, user));//ctrl+b 생성자이동
         return new ProductResponseDto(product);
     }
 
@@ -56,10 +42,10 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public List<ProductResponseDto> getProducts() {//함수형으로 한줄로해보기
+    public List<ProductResponseDto> getProducts(User user) {//함수형으로 한줄로해보기
 
         List<ProductResponseDto> responseDtoList=new ArrayList<>();
-        List<Product> products=productRepository.findAll();
+        List<Product> products=productRepository.findAllByUser( user); //이것도 altenter되네
 
         for (Product product : products) {
             responseDtoList.add(new ProductResponseDto(product));
@@ -76,4 +62,14 @@ public class ProductService {
      product.updateByItemDto(itemDto);
     }
 
+    public List<ProductResponseDto> getAllProducts() {
+        List<ProductResponseDto> responseDtoList=new ArrayList<>();
+        List<Product> products=productRepository.findAll(); //이것도 altenter되네
+
+        for (Product product : products) {
+            responseDtoList.add(new ProductResponseDto(product));
+
+        }
+        return responseDtoList;
+    }
 }
